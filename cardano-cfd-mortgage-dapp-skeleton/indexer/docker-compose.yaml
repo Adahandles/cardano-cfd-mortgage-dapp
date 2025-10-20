@@ -1,0 +1,12 @@
+version: '3'
+services:
+  ogmios:
+    image: cardano/ogmios:latest
+    ports:
+      - "1337:1337"
+    command: ["--host", "0.0.0.0", "--port", "1337"]
+  kupo:
+    image: cardano/kupo:latest
+    ports:
+      - "1442:1442"
+    command: ["--socket-path", "/node-ipc/node.socket", "--host", "0.0.0.0", "--port", "1442"]

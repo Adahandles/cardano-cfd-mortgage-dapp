@@ -1,0 +1,27 @@
+{
+  "tier": "A|B|C",
+  "checks": {
+    "identity": "KYC:PASS",
+    "notary": {
+      "provider": "",
+      "journalHash": "",
+      "videoHash": ""
+    },
+    "witnesses": [],
+    "delivery": {
+      "method": "",
+      "proofs": []
+    },
+    "possession": {
+      "borrowerMoveInAffidavitHash": "",
+      "utilityActivationHash": ""
+    },
+    "recording": {
+      "county": "",
+      "instrument": ""
+    },
+    "timeAnchors": [],
+    "status": "VALID",
+    "timestamp": 0
+  }
+}

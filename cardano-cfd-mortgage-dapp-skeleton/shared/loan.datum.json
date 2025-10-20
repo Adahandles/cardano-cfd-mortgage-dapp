@@ -1,0 +1,28 @@
+{
+  "tier": "A|B|C",
+  "state": "Draft|Active|Delinquent|Default|Takeback|Settled",
+  "financials": {
+    "principalC": 0,
+    "aprBps": 0,
+    "amortMonths": 0,
+    "installmentC": 0,
+    "nextDue": "YYYY-MM-DD",
+    "escrows": {
+      "tax": false,
+      "ins": false
+    }
+  },
+  "parties": {
+    "ownerPkh": "",
+    "servicerPkh": "",
+    "borrowerPkh": ""
+  },
+  "timers": {
+    "graceDays": 10,
+    "cureDays": 20
+  },
+  "evidence": {
+    "requiredSet": ["identity", "delivery", "timeAnchor"],
+    "attestRefs": []
+  }
+}
