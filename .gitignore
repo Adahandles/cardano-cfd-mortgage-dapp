@@ -1,0 +1,21 @@
+# Ignore Node dependencies and build artifacts
+node_modules/
+dist/
+build/
+
+# Environment and secret files
+.env
+.env.*
+*.skey
+*.priv
+*.key
+
+# Editor and system files
+.DS_Store
+
+# Aiken compiled artifacts and test outputs
+*.interop.json
+
+# Coverage and log files
+coverage/
+*.log
