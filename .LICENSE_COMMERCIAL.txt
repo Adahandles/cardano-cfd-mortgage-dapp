@@ -1,0 +1,9 @@
+Proprietary License – DeuOS / Cardano-CFD-Mortgage dApp
+Copyright (c) 2025 DeuOS, LLC. All rights reserved.
+
+This software and associated documentation files are proprietary and confidential.
+No part of this software may be reproduced, distributed, modified, or reverse-engineered
+without express written permission from DeuOS, LLC.
+
+Use of this software is granted only under a valid written agreement.
+Unauthorized use, distribution, or modification may result in legal action.
