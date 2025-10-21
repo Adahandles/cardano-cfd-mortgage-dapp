@@ -1,26 +1,38 @@
-name: Sync Proprietary License
+name: Sync Proprietary License & Headers
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 3 * * 1" # Weekly Monday 03:00 UTC
+    - cron: "0 3 * * 1" # Mondays 03:00 UTC
 
 permissions:
   contents: write
 
 jobs:
-  sync-license:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Sync license on all branches
+      - name: Clone repository mirror and enumerate branches
         run: |
           set -e
-          for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
-            git checkout "$branch"
+          git clone --mirror "https://github.com/${{ github.repository }}" mirror.git
+          cd mirror.git
+          for BR in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
+            echo "Adding worktree for $BR"
+            git worktree add "../$BR" "$BR"
+          done
+
+      - name: Sync license and add headers
+        run: |
+          set -e
+          # Define header lines
+          HEADER1="Copyright (c) 2025 DeuOS, LLC. All rights reserved."
+          HEADER2="Licensed under the DeuOS Proprietary License. See .LICENSE_COMMERCIAL.txt."
+          for dir in ../*; do
+            [ -d "$dir" ] || continue
+            cd "$dir"
+            echo "Updating branch $(basename $dir)"
+            # Write proprietary license files
             cat > .LICENSE_COMMERCIAL.txt <<'EOF'
 Proprietary License – DeuOS / Cardano-CFD-Mortgage dApp
 Copyright (c) 2025 DeuOS, LLC. All rights reserved.
@@ -33,8 +45,42 @@ Use of this software is granted only under a valid written agreement.
 Unauthorized use, distribution, or modification may result in legal action.
 EOF
             echo "This repository is protected under the DeuOS Proprietary License. See .LICENSE_COMMERCIAL.txt for the full terms." > LICENSE
-            git add LICENSE .LICENSE_COMMERCIAL.txt
-            if git commit -m "Sync proprietary license for $branch"; then
-              git push origin "$branch"
+
+            # Add header to source files if missing
+            for file in $(git ls-files | grep -E '\.([Hh]s|ts|tsx|js|jsx|py|sh|yaml|yml|json|sql|toml|rs|go|c|h|cpp|hpp)$'); do
+              # Skip binary files
+              if file "$file" | grep -qiE 'image|archive|audio|video|pdf'; then
+                continue
+              fi
+              # Check if header already present
+              if ! head -n 5 "$file" | grep -q "DeuOS, LLC. All rights reserved."; then
+                case "$file" in
+                  *.js|*.jsx|*.ts|*.tsx|*.rs|*.go|*.c|*.cpp|*.h|*.hpp)
+                    prefix="//"
+                    ;;
+                  *.py|*.sh)
+                    prefix="#"
+                    ;;
+                  *.yaml|*.yml|*.toml|*.json|*.sql|*.hs)
+                    prefix="#"
+                    ;;
+                  *)
+                    prefix="#"
+                    ;;
+                esac
+                # Prepend header lines
+                tmpfile=$(mktemp)
+                printf "%s %s\n%s %s\n\n" "$prefix" "$HEADER1" "$prefix" "$HEADER2" > "$tmpfile"
+                cat "$file" >> "$tmpfile"
+                mv "$tmpfile" "$file"
+              fi
+            done
+
+            git add .
+            # Commit if there are changes
+            if ! git diff --cached --quiet; then
+              git commit -m "Sync DeuOS proprietary license and add headers"
+              git push origin HEAD
             fi
+            cd ..
           done
