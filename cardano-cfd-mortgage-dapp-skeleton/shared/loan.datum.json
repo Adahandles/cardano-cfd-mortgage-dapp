@@ -2,15 +2,14 @@
   "tier": "A|B|C",
   "state": "Draft|Active|Delinquent|Default|Takeback|Settled",
   "financials": {
-    "principalC": 0,
-    "aprBps": 0,
-    "amortMonths": 0,
-    "installmentC": 0,
-    "nextDue": "YYYY-MM-DD",
-    "escrows": {
-      "tax": false,
-      "ins": false
-    }
+    "principal_l": 0,
+    "installment_l": 0,
+    "principal_usdc": 0,
+    "installment_usdc": 0,
+    "apr_bps": 0,
+    "amort_months": 0,
+    "next_due_slot": 0,
+    "currency_mode": "Ada"
   },
   "parties": {
     "ownerPkh": "",
